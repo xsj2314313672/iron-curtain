@@ -1,0 +1,59 @@
+# ============================================================
+# Unreal Engine 5 .gitignore
+# 适用于 UE 5.x 项目（C++ / Blueprint 通用）
+# 原则：只提交「源」文件（.uproject / Source / Content / Config / Build 平台配置）
+#       忽略「可再生成」的产物（编译中间文件、DDC、日志、IDE 工程文件）
+# ============================================================
+
+# ---------- Unreal Engine 生成目录（核心，必须忽略）----------
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# ---------- 打包 / 构建临时产物 ----------
+# 注意：不要忽略整个 Build/，打包需要的图标与平台配置都在里面
+Build/*.txt
+Build/Receipts/
+
+# ---------- Visual Studio ----------
+.vs/
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+*.VC.VC.opendb
+*.psess
+*.vsp
+*.vspx
+
+# ---------- JetBrains Rider ----------
+.idea/
+*.sln.DotSettings.user
+
+# ---------- VS Code ----------
+.vscode/
+*.code-workspace
+
+# ---------- Xcode / macOS ----------
+*.xcodeproj/
+*.xcworkspace/
+.DS_Store
+
+# ---------- Linux ----------
+.vscode-server/
+
+# ---------- 崩溃转储 / 日志 ----------
+*.log
+*.dmp
+crash-*.txt
+LogBackup-*.txt
+
+# ---------- 混合现实 / 平台额外缓存 ----------
+HoloLens/
+MagicLeap/
