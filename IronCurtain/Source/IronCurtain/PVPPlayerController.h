@@ -8,6 +8,7 @@
 
 class APVPCameraManager;
 class UInputMappingContext;
+class UPVPCameraPitchComponent;
 
 /**
  * PvP 模式的基础玩家控制器。
@@ -33,7 +34,15 @@ public:
 	UFUNCTION(BlueprintPure, Category = "PVP|Camera")
 	APVPCameraManager* GetPVPCameraManager() const;
 
+	/** 取相机管理组件（俯仰范围由它统一管理），一定有效 */
+	UFUNCTION(BlueprintPure, Category = "PVP|Camera")
+	UPVPCameraPitchComponent* GetCameraPitchComponent() const;
+
 protected:
+
+	/** 相机管理组件：统一管理第一人称镜头的俯仰范围（默认 -65 ~ 65） */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PVP|Camera")
+	UPVPCameraPitchComponent* CameraPitchComponent;
 
 	/** Gameplay 初始化 */
 	virtual void BeginPlay() override;

@@ -2,6 +2,7 @@
 
 #include "PVPPlayerController.h"
 #include "PVPCameraManager.h"
+#include "PVPCameraPitchComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "InputMappingContext.h"
@@ -12,6 +13,9 @@ APVPPlayerController::APVPPlayerController()
 {
 	// 用本项目的相机管理器替代引擎默认的 APlayerCameraManager
 	PlayerCameraManagerClass = APVPCameraManager::StaticClass();
+
+	// 相机管理组件：统一管理第一人称镜头的俯仰范围（默认 -65 ~ 65）
+	CameraPitchComponent = CreateDefaultSubobject<UPVPCameraPitchComponent>(TEXT("Camera Pitch Component"));
 
 	// PvP 全程锁定在游戏输入模式，不显示系统鼠标
 	bShowMouseCursor = false;
@@ -77,4 +81,9 @@ void APVPPlayerController::SetupInputComponent()
 APVPCameraManager* APVPPlayerController::GetPVPCameraManager() const
 {
 	return Cast<APVPCameraManager>(PlayerCameraManager);
+}
+
+UPVPCameraPitchComponent* APVPPlayerController::GetCameraPitchComponent() const
+{
+	return CameraPitchComponent;
 }

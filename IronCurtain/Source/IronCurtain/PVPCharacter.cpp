@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Engine/World.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "InputAction.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
@@ -31,11 +32,28 @@ APVPCharacter::APVPCharacter()
 	FirstPersonMesh->FirstPersonPrimitiveType = EFirstPersonPrimitiveType::FirstPerson;
 	FirstPersonMesh->SetCollisionProfileName(FName("NoCollision"));
 
+	// 弹簧臂：挂在第一人称 Mesh 的 head 插槽上，长度 0，只作为相机的稳定挂点
+	FirstPersonSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("First Person Spring Arm"));
+	FirstPersonSpringArm->SetupAttachment(FirstPersonMesh, FName("head"));
+	// 旋转按细节面板的顺序给：(0, 0, 90) = Roll 0 / Pitch 0 / Yaw 90
+	FirstPersonSpringArm->SetRelativeLocationAndRotation(FVector(5.0f, 5.0f, 0.0f), FRotator(0.0f, 90.0f, 0.0f));
+	FirstPersonSpringArm->TargetArmLength = 0.0f;
+
+	// 控制器驱动视角：Yaw 和 Pitch 跟随控制器（可以左右看、也能抬头低头），
+	// Roll 不继承，保持弹簧臂自己的本地 Roll（0），避免相机被横滚带歪
+	FirstPersonSpringArm->bUsePawnControlRotation = true;
+	FirstPersonSpringArm->bInheritYaw = true;
+	FirstPersonSpringArm->bInheritPitch = true;
+	FirstPersonSpringArm->bInheritRoll = false;
+
 	// Create the Camera Component	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("First Person Camera"));
-	FirstPersonCameraComponent->SetupAttachment(FirstPersonMesh, FName("head"));
-	FirstPersonCameraComponent->SetRelativeLocationAndRotation(FVector(-2.8f, 5.89f, 0.0f), FRotator(0.0f, 90.0f, -90.0f));
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	// 挂到弹簧臂末端插槽（SocketName），位置、旋转全部重置
+	FirstPersonCameraComponent->SetupAttachment(FirstPersonSpringArm, USpringArmComponent::SocketName);
+	FirstPersonCameraComponent->SetRelativeLocationAndRotation(FVector::ZeroVector, FRotator::ZeroRotator);
+	// Yaw 由弹簧臂统一处理，相机自己不再直接吃控制器旋转
+	FirstPersonCameraComponent->bUsePawnControlRotation = false;
+	FirstPersonCameraComponent->FieldOfView = 105.0f;
 	FirstPersonCameraComponent->bEnableFirstPersonFieldOfView = true;
 	FirstPersonCameraComponent->bEnableFirstPersonScale = true;
 	FirstPersonCameraComponent->FirstPersonFieldOfView = 70.0f;

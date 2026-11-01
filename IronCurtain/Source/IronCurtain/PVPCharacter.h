@@ -9,6 +9,7 @@
 
 class UInputComponent;
 class USkeletalMeshComponent;
+class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
@@ -24,7 +25,11 @@ class IRONCURTAIN_API APVPCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
 
-	/** First person camera */
+	/** Spring arm that carries the first person camera (zero length, attached to the mesh's head socket) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* FirstPersonSpringArm;
+
+	/** First person camera (attached to the spring arm socket) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
@@ -82,6 +87,9 @@ public:
 
 	/** Returns the first person mesh **/
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }
+
+	/** Returns the first person spring arm **/
+	USpringArmComponent* GetFirstPersonSpringArm() const { return FirstPersonSpringArm; }
 
 	/** Returns first person camera component **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }

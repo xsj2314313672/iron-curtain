@@ -8,9 +8,9 @@ namespace PVPCameraManagerConstants
 	constexpr float PitchHardMin = -89.0f;
 	constexpr float PitchHardMax = 89.0f;
 
-	/** 本项目 PvP 的默认俯仰范围：低头 75 度、抬头 75 度 */
-	constexpr float DefaultPitchMin = -75.0f;
-	constexpr float DefaultPitchMax = 75.0f;
+	/** 本项目 PvP 的默认俯仰范围：低头 65 度、抬头 65 度（组件 UPVPCameraPitchComponent 会覆盖它） */
+	constexpr float DefaultPitchMin = -65.0f;
+	constexpr float DefaultPitchMax = 65.0f;
 }
 
 APVPCameraManager::APVPCameraManager()
