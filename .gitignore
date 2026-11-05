@@ -61,3 +61,19 @@ MagicLeap/
 
 # ---------- 本地 AI / 编辑器工具配置（不入库） ----------
 .mcp.json
+
+# ---------- 第三方 / 模板素材（体积大，不入库） ----------
+# Assets_External 是 Epic 模板内容（Mannequins 角色、TP_FirstPerson 那套）：
+# 需要时用 Epic 启动器的「添加功能或内容包」重新导入，或从 UE 安装目录 Templates\ 下拷回来。
+IronCurtain/Content/Assets_External/
+
+# 这两套外部资源目前没有任何资产引用，而且加起来 1.2GB。
+# 先挡住，避免某次 git add . 把它们整包塞进 LFS（LFS 免费额度只有 1GB）。
+IronCurtain/Content/QuantumCharacter/
+IronCurtain/Content/XL_FPSPack/
+
+# FPS_Weapon_Bundle（约 205MB）现在是游戏实际用到的武器美术（SK_KA47 等）。
+# 忽略它 = 新克隆没有枪，所以默认保留在库里。
+# 确实想让它也出库的话，把下面这行的注释去掉，再执行：
+#   git rm -r --cached IronCurtain/Content/FPS_Weapon_Bundle
+# IronCurtain/Content/FPS_Weapon_Bundle/
