@@ -72,6 +72,15 @@ IronCurtain/Content/Assets_External/
 IronCurtain/Content/QuantumCharacter/
 IronCurtain/Content/XL_FPSPack/
 
+# QuantumCharacter 那张 World Partition 地图拆出来的 actor/object 数据（116 + 5 个文件，32MB）。
+# 地图本身属于上面已忽略的资源包，这些碎片跟着一起忽略；只忽略这个子目录，
+# 不要忽略整个 __ExternalActors__，否则以后你自己地图的外部 actor 会一起丢。
+IronCurtain/Content/__ExternalActors__/QuantumCharacter/
+IronCurtain/Content/__ExternalObjects__/QuantumCharacter/
+
+# ---------- 本地工具目录（不入库） ----------
+.workbuddy/
+
 # FPS_Weapon_Bundle（约 205MB）现在是游戏实际用到的武器美术（SK_KA47 等）。
 # 忽略它 = 新克隆没有枪，所以默认保留在库里。
 # 确实想让它也出库的话，把下面这行的注释去掉，再执行：
