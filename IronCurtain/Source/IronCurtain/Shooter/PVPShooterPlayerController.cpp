@@ -3,6 +3,9 @@
 #include "Shooter/PVPShooterPlayerController.h"
 #include "Shooter/PVPShooterCharacter.h"
 #include "IronCurtain.h"
+#include "AbilitySystem/PVPAbilitySystemComponent.h"
+#include "AbilitySystem/PVPGameplayTags.h"
+#include "GameplayEffect.h"
 
 APVPShooterPlayerController::APVPShooterPlayerController()
 {
@@ -29,4 +32,41 @@ void APVPShooterPlayerController::OnUnPossess()
 	ControlledShooterCharacter = nullptr;
 
 	Super::OnUnPossess();
+}
+
+void APVPShooterPlayerController::PVPDamageSelf(float DamageAmount)
+{
+	APVPShooterCharacter* ShooterCharacter = GetShooterCharacter();
+	if (!ShooterCharacter)
+	{
+		UE_LOG(LogIronCurtain, Error, TEXT("PVPDamageSelf: 没有角色"));
+		return;
+	}
+	UAbilitySystemComponent *ASC = ShooterCharacter->GetAbilitySystemComponent();
+	if (!ASC)
+	{
+		UE_LOG(LogIronCurtain, Error, TEXT("PVPDamageSelf: 没有ASC"));
+		return;
+	}
+	// 运行期按路径加载，成功后缓存在 UPROPERTY 成员里，后续调用直接复用
+	if (!DamageEffectClass)
+	{
+		DamageEffectClass = LoadClass<UGameplayEffect>(nullptr, TEXT("/Game/IronCurtain/GAS/GE/GE_Damage.GE_Damage_C"));
+
+		if (!DamageEffectClass)
+		{
+			UE_LOG(LogIronCurtain, Error,TEXT("PVPDamageSelf: 加载 GE_Damage 失败（/Game/IronCurtain/GAS/GE/GE_Damage）"));
+			return;
+		}
+	}
+	FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
+	Context.AddInstigator(ShooterCharacter,ShooterCharacter);
+	FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(DamageEffectClass,1.f,Context);
+	if (!SpecHandle.IsValid())
+	{
+		return;
+	}
+	SpecHandle.Data->SetSetByCallerMagnitude(PVPGameplayTags::SetByCaller_Damage,DamageAmount);
+	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	UE_LOG(LogIronCurtain, Log, TEXT("PVPDamageSelf: 自伤 %.1f"), DamageAmount);
 }

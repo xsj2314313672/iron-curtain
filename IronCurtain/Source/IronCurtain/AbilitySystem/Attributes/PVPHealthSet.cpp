@@ -11,6 +11,12 @@ UPVPHealthSet::UPVPHealthSet():Health(100.f),MaxHealth(100.f)
 	bOutOfHealth = false;
 }
 
+void UPVPHealthSet::ResetOutOfHealthFlag() const
+{
+	// 只复位闩锁，不动血量；血量由调用方通过 GE 或 SetNumericAttributeBase 设置
+	bOutOfHealth = false;
+}
+
 void UPVPHealthSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
 	Super::PreAttributeBaseChange(Attribute, NewValue);

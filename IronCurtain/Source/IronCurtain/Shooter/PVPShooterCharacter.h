@@ -48,6 +48,11 @@ public:
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void Tick(float DeltaSeconds) override;
+	
+	/** 控制台调试：输入 DebugKillSelf 直接走一遍死亡流程（绕过伤害，方便验证 Dying → Dead） */
+	UFUNCTION(Exec)
+	void DebugKillSelf();
+
 protected:
 	virtual void DoAim(float Yaw, float Pitch) override;
 	virtual void DoMove(float Right, float Forward)  override;
@@ -67,6 +72,10 @@ protected:
 	UFUNCTION()
 	void HandleDeathStarted(AActor* OwningActor, AActor* Killer);
 	
+	/** 死亡结算完成（Dying → Dead）：日志锚点，也是后续死亡结算表现（音效/UI/掉落）的唯一挂载点 */
+	UFUNCTION()
+	void HandleDeathFinished(AActor* OwningActor, AActor* Killer);
+
 	void RestartLevelAfterDeath();
 	
 	// Input System
@@ -100,7 +109,10 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly,Category="Shooter")
 	bool bRestartLevelOnDeath;
-	
+
 private:
 	bool bAbilitySystemInitialized = false;
+
+	/** 死亡表现是否已经执行过（等价于蓝图里的 Do Once） */
+	bool bDeathStateApplied = false;
 };

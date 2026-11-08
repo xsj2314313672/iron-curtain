@@ -7,6 +7,7 @@
 #include "PVPShooterPlayerController.generated.h"
 
 class APVPShooterCharacter;
+class UGameplayEffect;
 
 /**
  * 射击玩法的玩家控制器。
@@ -39,4 +40,11 @@ protected:
 	/** 缓存的射击角色 */
 	UPROPERTY(Transient, BlueprintReadOnly, Category = "PVP|Shooter")
 	TObjectPtr<APVPShooterCharacter> ControlledShooterCharacter;
+
+	/** GE_Damage 的类引用，首次调用 PVPDamageSelf 时按路径加载并缓存 */
+	UPROPERTY(Transient)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UFUNCTION(Exec)
+	void PVPDamageSelf(float DamageAmount = 10.f);
 };

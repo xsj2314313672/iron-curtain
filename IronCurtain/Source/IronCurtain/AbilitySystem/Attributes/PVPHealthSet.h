@@ -24,6 +24,9 @@ public:
 	ATTRIBUTE_ACCESSORS_BASIC(UPVPHealthSet,MaxHealth);
 	ATTRIBUTE_ACCESSORS_BASIC(UPVPHealthSet,Damage);
 	
+	/** 复位"血量已归零"的闩锁：用 SetNumericAttributeBase 直接改血（不走 GE）时 PostGameplayEffectExecute 不会复位它 */
+	void ResetOutOfHealthFlag() const;
+	
 	mutable FPVPAttributeEvent OnHealthChangeDelegate;
 	mutable FPVPAttributeEvent OnMaxHealthChangeDelegate;
 	mutable FPVPAttributeEvent OnOutOfHealthDelegate;
@@ -40,6 +43,7 @@ private:
 	UPROPERTY(BlueprintReadOnly,Category="PVP|Health",meta=(AllowPrivateAccess=true))
 	FGameplayAttributeData Damage;
 	
-	bool bOutOfHealth = false;
+	/** mutable：ResetOutOfHealthFlag 是 const 方法，但需要复位这个闩锁 */
+	mutable bool bOutOfHealth = false;
 	float HealthBeforeAttributeChange = 0.0f;
 };
